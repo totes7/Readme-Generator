@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const inquirer = require("inquirer");
 const generateMarkdown = require("./utils/generateMarkdown");
-const licenses = require('./utils/licences')
+const licenses = require("./utils/licences");
 
 // array of questions for user
 const questions = [
@@ -28,46 +28,59 @@ const questions = [
     name: "usage",
   },
   {
-    type: "list",
-    message: "Choose your license from the list below.",
-    choices: licenses,
-    name: "license",
-  },
-  {
     type: "input",
     message: "Type in instruction to contribute to the project.",
     name: "contributing",
   },
   {
     type: "input",
-    message: "Type in your GitHub username to be added into the 'Questions' section.",
-    name: "q-username",
+    message: "Describe the testing done on this project.",
+    name: "tests",
   },
   {
     type: "input",
-    message: "Type in your email address to be added into the 'Questions' section.",
-    name: "q-email",
+    message:
+      "Type in your GitHub username to be added into the 'Questions' section.",
+    name: "github",
+  },
+  {
+    type: "input",
+    message:
+      "Type in your email address to be added into the 'Questions' section.",
+    name: "email",
+  },
+  {
+    type: "list",
+    message: "Choose your license from the list below.",
+    choices: licenses,
+    name: "license",
   },
 ];
 
-inquirer
-  .prompt(questions)
-  .then(function(response) {
-    console.log(response.license);
-    let licenseName = '';
-    for (const {name, value} of licenses) {
-        if (value === response.license) {
-            licenseName += name;
-        }
-    }
-    console.log(licenseName);
-  })
-
 // function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, data, (err) =>
+    err ? console.error(err) : console.log("Success!")
+  );
+}
 
 // function to initialize program
-function init() {}
+function init() {
+  inquirer.prompt(questions).then(function (response) {
+    let licenseName = "";
+    for (const { name, value } of licenses) {
+      if (value === response.license) {
+        licenseName += name;
+      }
+    }
+
+    let steps = response.installation.split(",");
+
+    let newFile = generateMarkdown(response, steps, licenseName);
+
+    writeToFile('README.md', newFile);
+  });
+}
 
 // function call to initialize program
 init();
