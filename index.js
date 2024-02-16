@@ -88,6 +88,21 @@ const questions = [
     choices: licenses,
     name: "license",
   },
+  {
+    type: "input",
+    message: "Type in instruction to contribute to the project.",
+    name: "contributing",
+  },
+  {
+    type: "input",
+    message: "Type in your GitHub username to be added into the 'Questions' section.",
+    name: "q-username",
+  },
+  {
+    type: "input",
+    message: "Type in your email address to be added into the 'Questions' section.",
+    name: "q-email",
+  },
 ];
 
 inquirer
